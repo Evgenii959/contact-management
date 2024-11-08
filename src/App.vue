@@ -18,21 +18,19 @@ const contactsStore = useContactsStore();
 const { contacts, fetchContacts } = contactsStore;
 const searchQuery = ref("");
 
-console.log(contacts);
 const updateSearchQuery = (query: string) => {
   searchQuery.value = query;
-  saveFilteredContactsToLocalStorage();
 };
 
 const clearSearchQuery = () => {
   searchQuery.value = "";
-  localStorage.removeItem("contacts");
+  saveContactsToLocalStorage();
 };
 
 const deleteContact = (contactId: number) => {
   const index = contacts.findIndex((contact) => contact.id === contactId);
   contacts.splice(index, 1);
-  saveFilteredContactsToLocalStorage();
+  saveContactsToLocalStorage();
 };
 
 const filteredContacts = computed(() => {
@@ -47,10 +45,10 @@ const filteredContacts = computed(() => {
   );
 });
 
-const saveFilteredContactsToLocalStorage = () => {
-  const filtered = filteredContacts.value;
-  localStorage.setItem("contacts", JSON.stringify(filtered));
+const saveContactsToLocalStorage = () => {
+  localStorage.setItem("contacts", JSON.stringify(contactsStore.contacts));
 };
+
 
 onMounted(() => {
   fetchContacts();

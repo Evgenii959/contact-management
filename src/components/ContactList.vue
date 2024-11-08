@@ -27,6 +27,7 @@ const editingContact = ref<Contact | null>(null);
 const emit = defineEmits(["deleteContact"]);
 const deleteContact = (contactId: number) => {
   emit("deleteContact", contactId);
+  localStorage.setItem("contacts", JSON.stringify(props.contacts));
 };
 
 const submitEdit = (updatedContact: Contact) => {

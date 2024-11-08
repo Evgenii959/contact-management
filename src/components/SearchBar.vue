@@ -29,12 +29,7 @@ const emitSearch = () => {
 const showAllContacts = () => {
   searchQuery.value = "";
   emit("search", searchQuery.value);
-  localStorage.removeItem("contacts");
 };
 </script>
 
-<style scoped>
-input {
-  font-size: 16px;
-}
-</style>
+<style scoped></style>
