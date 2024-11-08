@@ -30,12 +30,10 @@ const emit = defineEmits(["update:modelValue", "resetSearchQuery"]);
 
 const localSearchQuery = ref(props.modelValue);
 
-// Отправка поиска
 const emitSearch = () => {
   emit("update:modelValue", localSearchQuery.value);
 };
 
-// Показать все контакты
 const showAllContacts = () => {
   localSearchQuery.value = "";
   emit("update:modelValue", "");
