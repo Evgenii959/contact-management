@@ -1,47 +1,58 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl mb-4 text-center">Управление контактами</h1>
+    <SearchBar @search="updateSearchQuery" :contacts="filteredContacts" />
+    <ContactForm @save="clearSearchQuery" />
+    <ContactList :contacts="filteredContacts" @deleteContact="deleteContact" />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import { useContactsStore } from "./store/useContactsStore";
+import SearchBar from "./components/SearchBar.vue";
+import ContactForm from "./components/ContactForm.vue";
+import ContactList from "./components/ContactList.vue";
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+const contactsStore = useContactsStore();
+const { contacts, fetchContacts } = contactsStore;
+const searchQuery = ref("");
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+console.log(contacts);
+const updateSearchQuery = (query: string) => {
+  searchQuery.value = query;
+  saveFilteredContactsToLocalStorage();
+};
+
+const clearSearchQuery = () => {
+  searchQuery.value = "";
+  localStorage.removeItem("contacts");
+};
+
+const deleteContact = (contactId: number) => {
+  const index = contacts.findIndex((contact) => contact.id === contactId);
+  contacts.splice(index, 1);
+  saveFilteredContactsToLocalStorage();
+};
+
+const filteredContacts = computed(() => {
+  if (!searchQuery.value) {
+    return contacts;
   }
+  return contacts.filter(
+    (contact) =>
+      contact.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      contact.phone.includes(searchQuery.value) ||
+      contact.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+const saveFilteredContactsToLocalStorage = () => {
+  const filtered = filteredContacts.value;
+  localStorage.setItem("contacts", JSON.stringify(filtered));
+};
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+onMounted(() => {
+  fetchContacts();
+});
+</script>
