@@ -2,7 +2,7 @@
   <div class="mb-4 flex">
     <input
       type="text"
-      v-model="searchQuery"
+      v-model="localSearchQuery"
       placeholder="Поиск контакта..."
       class="w-full p-2 border rounded"
     />
@@ -19,16 +19,27 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const emit = defineEmits(["search"]);
-const searchQuery = ref("");
+const props = defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+});
 
+const emit = defineEmits(["update:modelValue", "resetSearchQuery"]);
+
+const localSearchQuery = ref(props.modelValue);
+
+// Отправка поиска
 const emitSearch = () => {
-  emit("search", searchQuery.value);
+  emit("update:modelValue", localSearchQuery.value);
 };
 
+// Показать все контакты
 const showAllContacts = () => {
-  searchQuery.value = "";
-  emit("search", searchQuery.value);
+  localSearchQuery.value = "";
+  emit("update:modelValue", "");
+  emit("resetSearchQuery");
 };
 </script>
 

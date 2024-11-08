@@ -22,18 +22,21 @@ const props = defineProps<{
   contacts: Contact[];
 }>();
 
+
 const editingContact = ref<Contact | null>(null);
 
-const emit = defineEmits(["deleteContact"]);
+const emit = defineEmits<{
+  (event: 'deleteContact', contactId: number): void;
+  (event: 'updateContact', updatedContact: Contact): void;
+}>();
+
 const deleteContact = (contactId: number) => {
   emit("deleteContact", contactId);
   localStorage.setItem("contacts", JSON.stringify(props.contacts));
 };
 
 const submitEdit = (updatedContact: Contact) => {
-  console.log(updatedContact);
-  const index = props.contacts.findIndex((c) => c.id === updatedContact.id);
-  props.contacts[index] = updatedContact;
+  emit("updateContact", updatedContact);
   editingContact.value = null;
 };
 </script>

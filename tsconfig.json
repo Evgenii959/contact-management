@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
     "types": ["vite/client", "vue"],
-    "lib": ["es2020", "dom"], 
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
     "strict": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
