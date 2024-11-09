@@ -2,31 +2,48 @@
   <div>
     <li class="flex justify-between items-center p-2 border rounded">
       <div>
-        <p>{{ contact.name }}</p>
-        <p class="text-sm text-gray-500">
-          {{ contact.phone }} | {{ contact.email }}
-        </p>
+        <div v-if="!isEditing">
+          <p>{{ editedContact.name }}</p>
+          <p class="text-sm text-gray-500">
+            {{ editedContact.phone }} | {{ editedContact.email }}
+          </p>
+        </div>
+        <div v-else>
+          <input
+            v-model="editedContact.name"
+            type="text"
+            placeholder="Имя"
+            class="w-full p-1 border rounded mb-1"
+          />
+          <input
+            v-model="editedContact.phone"
+            type="text"
+            placeholder="Телефон"
+            class="w-full p-1 border rounded mb-1"
+          />
+          <input
+            v-model="editedContact.email"
+            type="email"
+            placeholder="Email"
+            class="w-full p-1 border rounded"
+          />
+        </div>
       </div>
       <div class="flex space-x-2">
-        <button @click="toggleEditForm" class="text-blue-500">
+        <button v-if="!isEditing" @click="toggleEditForm" class="text-blue-500">
           Редактировать
+        </button>
+        <button v-else @click="saveContact" class="text-green-500">
+          Сохранить
         </button>
         <button @click="deleteContact" class="text-red-500">Удалить</button>
       </div>
     </li>
-    <div v-if="isEditing">
-      <ContactForm
-        :editContact="contact"
-        @save="saveContact"
-        @close="closeEditForm"
-      />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref } from "vue";
-import ContactForm from "./ContactForm.vue";
 
 interface Contact {
   id: number;
@@ -45,25 +62,23 @@ const props = defineProps({
 const emit = defineEmits(["edit", "delete"]);
 
 const isEditing = ref(false);
+const editedContact = ref<Contact>({ ...props.contact });
+console.log(editedContact.value.name)
+
+const toggleEditForm = () => {
+  isEditing.value = true;
+};
+
+const saveContact = () => {
+  emit("edit", editedContact.value);
+  updateLocalStorageAfterEdit(editedContact.value);
+  isEditing.value = false;
+};
 
 const deleteContact = () => {
   if (confirm("Вы уверены, что хотите удалить этот контакт?")) {
     emit("delete", props.contact.id);
   }
-};
-
-const toggleEditForm = () => {
-  isEditing.value = !isEditing.value;
-};
-
-const saveContact = (updatedContact: Contact) => {
-  emit("edit", updatedContact);
-  updateLocalStorageAfterEdit(updatedContact);
-  closeEditForm();
-};
-
-const closeEditForm = () => {
-  isEditing.value = false;
 };
 
 const updateLocalStorageAfterEdit = (updatedContact: Contact) => {

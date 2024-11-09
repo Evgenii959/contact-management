@@ -6,13 +6,21 @@
       @update:modelValue="updateSearchQuery"
       @resetSearchQuery="resetSearchQuery"
     />
-    <ContactForm @save="clearSearchQuery" />
-    <ContactList :contacts="filteredContacts" @deleteContact="deleteContact" @updateContact="updateContact"/>
+    <ContactForm
+      :contacts="filteredContacts"
+      @save="clearSearchQuery"
+      :saveContactsToLocalStorage="saveContactsToLocalStorage"
+    />
+    <ContactList
+      :contacts="filteredContacts"
+      @deleteContact="deleteContact"
+      @updateContact="updateContact"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, provide } from "vue";
+import { ref, computed, onMounted } from "vue";
 import SearchBar from "./components/SearchBar.vue";
 import ContactForm from "./components/ContactForm.vue";
 import ContactList from "./components/ContactList.vue";
@@ -56,7 +64,7 @@ const deleteContact = (contactId: number) => {
 };
 
 const updateContact = (updatedContact: Contact) => {
-  const index = contacts.value.findIndex(c => c.id === updatedContact.id);
+  const index = contacts.value.findIndex((c) => c.id === updatedContact.id);
   if (index !== -1) {
     contacts.value[index] = updatedContact;
     localStorage.setItem("contacts", JSON.stringify(contacts.value));
@@ -67,16 +75,22 @@ const filteredContacts = computed(() => {
   if (!searchQuery.value) {
     return contacts.value;
   }
-  return contacts.value.filter(
-    (contact) =>
-      contact.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      contact.phone.includes(searchQuery.value) ||
-      contact.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  return contacts.value.filter((contact) => {
+    return (
+      (contact.name && contact.name.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      (contact.phone && contact.phone.includes(searchQuery.value)) ||
+      (contact.email && contact.email.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    );
+  });
 });
 
 const saveContactsToLocalStorage = () => {
   localStorage.setItem("contacts", JSON.stringify(contacts.value));
+};
+
+const resetSearchQuery = () => {
+  searchQuery.value = "";
+  localStorage.removeItem("searchQuery");
 };
 
 onMounted(() => {
@@ -86,13 +100,4 @@ onMounted(() => {
   }
   fetchContacts();
 });
-
-const resetSearchQuery = () => {
-  searchQuery.value = "";
-  localStorage.removeItem("searchQuery");
-};
-
-provide("contacts", contacts);
-provide("deleteContact", deleteContact);
-provide("saveContactsToLocalStorage", saveContactsToLocalStorage);
 </script>

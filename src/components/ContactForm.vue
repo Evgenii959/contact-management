@@ -1,95 +1,104 @@
 <template>
   <div class="mb-4">
-    <form @submit.prevent="save">
+    <Form @submit="submitForm">
       <div class="space-y-2">
         <div>
-          <input
-            v-model="form.name"
-            type="text"
+          <Field
+            v-model="name"
+            name="name"
             placeholder="Имя"
             class="w-full p-2 border rounded"
+            validate-on-input
           />
+          <span v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</span>
         </div>
         <div>
-          <input
-            v-model="form.phone"
-            type="text"
+          <Field
+            v-model="phone"
+            name="phone"
             placeholder="Телефон"
             class="w-full p-2 border rounded"
+            validate-on-input
           />
+          <span v-if="phoneError" class="text-red-500 text-sm">{{ phoneError }}</span>
         </div>
         <div>
-          <input
-            v-model="form.email"
+          <Field
+            v-model="email"
+            name="email"
             type="email"
             placeholder="Email"
             class="w-full p-2 border rounded"
+            validate-on-input
           />
+          <span v-if="emailError" class="text-red-500 text-sm">{{ emailError }}</span>
         </div>
       </div>
-      <button type="submit" class="mt-4 w-full p-2 bg-blue-500 text-white rounded">
+      <button
+        type="submit"
+        class="mt-4 w-full p-2 bg-blue-500 text-white rounded"
+      >
         Сохранить
       </button>
-    </form>
+    </Form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, inject, Ref } from "vue";
+import { defineProps, defineEmits, Ref } from "vue";
+import { Form, Field, useForm, useField } from "vee-validate";
+import * as yup from "yup";
 import { Contact } from "../fakeContacts";
 
-const contacts = inject('contacts') as Ref<Contact[]>;
-const saveContactsToLocalStorage = inject('saveContactsToLocalStorage') as () => void;
-
-const form = ref<Contact>({
-  id: null,
-  name: "",
-  phone: "",
-  email: "",
+const schema = yup.object({
+  name: yup
+    .string()
+    .required("Имя обязательно")
+    .min(2, "Минимальная длина имени 2 символа"),
+  phone: yup
+    .string()
+    .required("Телефон обязателен")
+    .min(10, "Телефон должен быть не менее 10 символов"),
+  email: yup
+    .string()
+    .required("Email обязателен")
+    .email("Введите корректный email"),
 });
 
-const props = defineProps({
-  editContact: {
-    type: Object as () => Contact | null,
-    default: null,
-  },
+const { handleSubmit: formSubmitHandler, resetForm } = useForm({
+  validationSchema: schema,
 });
+
+const { value: name, errorMessage: nameError } = useField("name");
+const { value: phone, errorMessage: phoneError } = useField("phone");
+const { value: email, errorMessage: emailError } = useField("email");
+
+const props = defineProps<{
+  contacts: Ref<Contact[]>;
+  saveContactsToLocalStorage: () => void;
+}>();
 
 const emit = defineEmits(["save", "close"]);
 
-const save = () => {
-  if (form.value.id) {
-    saveEditedContact();
-  } else {
-    createNewContact();
-  }
-};
-
-const saveEditedContact = () => {
-  const index = contacts.value.findIndex((contact) => contact.id === form.value.id);
-  contacts.value[index] = { ...form.value };
-  saveContactsToLocalStorage();
-  emit("save", form.value);
-  emit("close");
+const initialValues = {
+  name: '',
+  phone: '',
+  email: ''
 };
 
 const createNewContact = () => {
-  form.value.id = Date.now();
-  contacts.value.unshift({ ...form.value });
-  saveContactsToLocalStorage();
-  emit("save", form.value);
-  form.value = { id: null, name: "", phone: "", email: "" };
+  const newContact = {
+    id: Date.now(),
+    name: name.value,
+    phone: phone.value,
+    email: email.value,
+  };
+  props.contacts.unshift(newContact);
+  props.saveContactsToLocalStorage();
+  emit("save", newContact);
+
+ resetForm({ values: initialValues });
 };
 
-watch(
-  () => props.editContact,
-  (newValue) => {
-    if (newValue) {
-      form.value = { ...newValue };
-    }
-  },
-  { immediate: true }
-);
+const submitForm = formSubmitHandler(createNewContact);
 </script>
-
-<style scoped></style>
