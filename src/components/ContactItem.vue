@@ -35,7 +35,7 @@
       <button v-else @click="saveContact" class="text-green-500">
         Сохранить
       </button>
-      <button @click="deleteContact" class="text-red-500">Удалить</button>
+      <button class="delete-button text-red-500" @click="deleteContact">Удалить</button>
     </div>
   </li>
 </template>
@@ -51,7 +51,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits<{
+  (event: "delete", contactId: number): void;
+}>();
 
 const isEditing = ref(false);
 const editedContact = ref<Contact>({ ...props.contact });
@@ -61,7 +63,6 @@ const toggleEditForm = () => {
 };
 
 const saveContact = () => {
-  emit("edit", editedContact.value);
   updateLocalStorageAfterEdit(editedContact.value);
   isEditing.value = false;
 };

@@ -14,7 +14,6 @@
     <ContactList
       :contacts="filteredContacts"
       @deleteContact="deleteContact"
-      @updateContact="updateContact"
     />
   </div>
 </template>
@@ -60,14 +59,6 @@ const deleteContact = (contactId: number) => {
   const index = contacts.value.findIndex((contact) => contact.id === contactId);
   if (index !== -1) {
     contacts.value.splice(index, 1);
-    saveContactsToLocalStorage();
-  }
-};
-
-const updateContact = (updatedContact: Contact) => {
-  const index = contacts.value.findIndex((c) => c.id === updatedContact.id);
-  if (index !== -1) {
-    contacts.value[index] = updatedContact;
     saveContactsToLocalStorage();
   }
 };

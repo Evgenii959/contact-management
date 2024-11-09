@@ -2,7 +2,8 @@
   "compilerOptions": {
     "types": ["vite/client", "vue", "jest"],
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "target": "ES2022",
+    "lib": ["es2022", "dom"],
     "strict": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,

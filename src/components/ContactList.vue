@@ -7,14 +7,13 @@
           :key="contact.id"
           :contact="contact"
           @delete="deleteContact"
-          :submitEdit="submitEdit"
         />
       </TransitionGroup>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits } from "vue";
 import { Contact } from "../fakeContacts";
 import ContactItem from "./ContactItem.vue";
 
@@ -22,24 +21,18 @@ defineProps<{
   contacts: Contact[];
 }>();
 
-const editingContact = ref<Contact | null>(null);
 
 const emit = defineEmits<{
   (event: "deleteContact", contactId: number): void;
-  (event: "updateContact", updatedContact: Contact): void;
 }>();
 
 const deleteContact = (contactId: number) => {
   emit("deleteContact", contactId);
 };
 
-const submitEdit = (updatedContact: Contact) => {
-  emit("updateContact", updatedContact);
-  editingContact.value = null;
-};
 </script>
 
-<style scoped>
+<style lang='css' scoped>
 .fade-enter-active {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
