@@ -1,4 +1,3 @@
-
 <template>
   <div class="container mx-auto p-4">
     <h1 class="text-3xl mb-4 text-center">Управление контактами</h1>
@@ -28,7 +27,7 @@ import ContactList from "./components/ContactList.vue";
 import { Contact } from "./fakeContacts";
 import { getContacts } from "./api/getContacts";
 
-const searchQuery = ref('');
+const searchQuery = ref("");
 const contacts = ref<Contact[]>([]);
 
 const fetchContacts = async () => {
@@ -79,9 +78,11 @@ const filteredContacts = computed(() => {
   }
   return contacts.value.filter((contact) => {
     return (
-      (contact.name && contact.name.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
+      (contact.name &&
+        contact.name.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
       (contact.phone && contact.phone.includes(searchQuery.value)) ||
-      (contact.email && contact.email.toLowerCase().includes(searchQuery.value.toLowerCase()))
+      (contact.email &&
+        contact.email.toLowerCase().includes(searchQuery.value.toLowerCase()))
     );
   });
 });
@@ -103,3 +104,6 @@ onMounted(() => {
   fetchContacts();
 });
 </script>
+
+<style scoped>
+</style>

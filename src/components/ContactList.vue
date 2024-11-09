@@ -1,15 +1,15 @@
 <template>
   <div>
     <h2>Список контактов</h2>
-    <ul class="space-y-2">
-      <ContactItem
-        v-for="contact in contacts"
-        :key="contact.id || -1"
-        :contact="contact"
-        @delete="deleteContact"
-        :submitEdit="submitEdit"
-      />
-    </ul>
+      <transition-group name="fade" tag="ul" class="space-y-2">
+        <ContactItem
+          v-for="contact in contacts"
+          :key="contact.id"
+          :contact="contact"
+          @delete="deleteContact"
+          :submitEdit="submitEdit"
+        />
+      </transition-group>
   </div>
 </template>
 
@@ -39,4 +39,14 @@ const submitEdit = (updatedContact: Contact) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.7s ease;
+  transform: translateX(-100%);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+</style>
