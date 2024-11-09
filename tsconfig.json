@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["vite/client", "vue"],
+    "types": ["vite/client", "vue", "jest"],
     "module": "esnext",
     "lib": ["es2020", "dom"],
     "strict": true,
@@ -8,5 +8,5 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["tests/**/*", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
