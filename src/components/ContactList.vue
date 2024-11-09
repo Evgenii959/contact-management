@@ -4,7 +4,7 @@
     <ul class="space-y-2">
       <ContactItem
         v-for="contact in contacts"
-        :key="contact.id"
+        :key="contact.id || -1"
         :contact="contact"
         @delete="deleteContact"
         :submitEdit="submitEdit"
@@ -14,25 +14,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 import { Contact } from "../fakeContacts";
 import ContactItem from "./ContactItem.vue";
 
-const props = defineProps<{
+defineProps<{
   contacts: Contact[];
 }>();
-
 
 const editingContact = ref<Contact | null>(null);
 
 const emit = defineEmits<{
-  (event: 'deleteContact', contactId: number): void;
-  (event: 'updateContact', updatedContact: Contact): void;
+  (event: "deleteContact", contactId: number): void;
+  (event: "updateContact", updatedContact: Contact): void;
 }>();
 
 const deleteContact = (contactId: number) => {
   emit("deleteContact", contactId);
-  localStorage.setItem("contacts", JSON.stringify(props.contacts));
 };
 
 const submitEdit = (updatedContact: Contact) => {

@@ -45,10 +45,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, Ref } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 import { Form, Field, useForm, useField } from "vee-validate";
 import * as yup from "yup";
 import { Contact } from "../fakeContacts";
+
+type FormValues = {
+  name: string;
+  phone: string;
+  email: string;
+};
 
 const schema = yup.object({
   name: yup
@@ -65,7 +71,11 @@ const schema = yup.object({
     .email("Введите корректный email"),
 });
 
-const { handleSubmit: formSubmitHandler, resetForm } = useForm({
+const { handleSubmit: formSubmitHandler, resetForm } = useForm<{
+  name: string;
+  phone: string;
+  email: string;
+}>({
   validationSchema: schema,
 });
 
@@ -74,31 +84,32 @@ const { value: phone, errorMessage: phoneError } = useField("phone");
 const { value: email, errorMessage: emailError } = useField("email");
 
 const props = defineProps<{
-  contacts: Ref<Contact[]>;
+  contacts: Contact[];
   saveContactsToLocalStorage: () => void;
 }>();
 
 const emit = defineEmits(["save", "close"]);
 
 const initialValues = {
-  name: '',
-  phone: '',
-  email: ''
+  name: "",
+  phone: "",
+  email: "",
 };
 
-const createNewContact = () => {
-  const newContact = {
+const localContacts = ref<Contact[]>([...props.contacts]);
+
+const createNewContact = async (values: FormValues): Promise<void> => {
+  const newContact: Contact = {
     id: Date.now(),
-    name: name.value,
-    phone: phone.value,
-    email: email.value,
+    name: values.name,
+    phone: values.phone,
+    email: values.email,
   };
-  props.contacts.unshift(newContact);
+  localContacts.value = [newContact, ...localContacts.value];
   props.saveContactsToLocalStorage();
   emit("save", newContact);
-
- resetForm({ values: initialValues });
+  resetForm({ values: initialValues });
 };
 
-const submitForm = formSubmitHandler(createNewContact);
+const submitForm: any = formSubmitHandler(createNewContact);
 </script>

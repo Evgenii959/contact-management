@@ -1,3 +1,4 @@
+
 <template>
   <div class="container mx-auto p-4">
     <h1 class="text-3xl mb-4 text-center">Управление контактами</h1>
@@ -8,7 +9,7 @@
     />
     <ContactForm
       :contacts="filteredContacts"
-      @save="clearSearchQuery"
+      @save="saveNewContact"
       :saveContactsToLocalStorage="saveContactsToLocalStorage"
     />
     <ContactList
@@ -27,19 +28,8 @@ import ContactList from "./components/ContactList.vue";
 import { Contact } from "./fakeContacts";
 import { getContacts } from "./api/getContacts";
 
-const searchQuery = ref("");
+const searchQuery = ref('');
 const contacts = ref<Contact[]>([]);
-
-const updateSearchQuery = (query: string) => {
-  searchQuery.value = query;
-  localStorage.setItem("searchQuery", query);
-};
-
-const clearSearchQuery = () => {
-  searchQuery.value = "";
-  saveContactsToLocalStorage();
-  localStorage.removeItem("searchQuery");
-};
 
 const fetchContacts = async () => {
   const cachedContacts = localStorage.getItem("contacts");
@@ -50,24 +40,36 @@ const fetchContacts = async () => {
     try {
       const response = await getContacts();
       contacts.value = response.data;
-      localStorage.setItem("contacts", JSON.stringify(response.data));
+      saveContactsToLocalStorage();
     } catch (error) {
       console.error("Ошибка при получении контактов:", error);
     }
   }
 };
 
+const saveNewContact = (newContact: Contact) => {
+  contacts.value = [newContact, ...contacts.value];
+  saveContactsToLocalStorage();
+};
+
+const updateSearchQuery = (query: string) => {
+  searchQuery.value = query;
+  localStorage.setItem("searchQuery", query);
+};
+
 const deleteContact = (contactId: number) => {
   const index = contacts.value.findIndex((contact) => contact.id === contactId);
-  contacts.value.splice(index, 1);
-  saveContactsToLocalStorage();
+  if (index !== -1) {
+    contacts.value.splice(index, 1);
+    saveContactsToLocalStorage();
+  }
 };
 
 const updateContact = (updatedContact: Contact) => {
   const index = contacts.value.findIndex((c) => c.id === updatedContact.id);
   if (index !== -1) {
     contacts.value[index] = updatedContact;
-    localStorage.setItem("contacts", JSON.stringify(contacts.value));
+    saveContactsToLocalStorage();
   }
 };
 

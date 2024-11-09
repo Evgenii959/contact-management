@@ -46,7 +46,7 @@
 import { defineProps, defineEmits, ref } from "vue";
 
 interface Contact {
-  id: number;
+  id: number | null | PropertyKey | undefined;
   name: string;
   email: string;
   phone: string;
@@ -63,7 +63,6 @@ const emit = defineEmits(["edit", "delete"]);
 
 const isEditing = ref(false);
 const editedContact = ref<Contact>({ ...props.contact });
-console.log(editedContact.value.name)
 
 const toggleEditForm = () => {
   isEditing.value = true;

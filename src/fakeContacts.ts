@@ -1,5 +1,5 @@
 export interface Contact {
-  id: number | null;
+  id: number | null | undefined;
   name: string;
   phone: string;
   email: string;
