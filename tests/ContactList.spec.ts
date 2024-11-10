@@ -20,6 +20,8 @@ describe("ContactList.vue", () => {
       },
     });
 
+    const confirmSpy = jest.spyOn(window, "confirm").mockReturnValue(true);
+
     const deleteButton = wrapper.findAll("button.delete-button")[0];
     expect(deleteButton.text()).toBe("Удалить");
     await deleteButton.trigger("click");
@@ -27,5 +29,7 @@ describe("ContactList.vue", () => {
     const emittedEvents = wrapper.emitted("deleteContact");
     expect(emittedEvents).toBeTruthy();
     expect(emittedEvents![0]).toEqual([fakeContacts[0].id]);
+
+      confirmSpy.mockRestore();
   });
 });
