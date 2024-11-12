@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref } from "vue";
 import { Form, Field, useForm, useField } from "vee-validate";
 import * as yup from "yup";
 import { Contact } from "../fakeContacts";

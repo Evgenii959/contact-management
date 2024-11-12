@@ -13,7 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
 import { Contact } from "../fakeContacts";
 import ContactItem from "./ContactItem.vue";
 
@@ -39,10 +38,6 @@ const deleteContact = (contactId: number) => {
 
 .fade-leave-active {
   transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.fade-enter {
-  opacity: 0.2;
 }
 
 .fade-enter-to {
