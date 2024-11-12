@@ -36,7 +36,11 @@
       >
         Редактировать
       </button>
-      <button v-else @click="saveContact" class="text-green-500">
+      <button
+        v-else
+        @click="saveContact"
+        class="text-green-500 hover:opacity-75 transition-opacity duration-300"
+      >
         Сохранить
       </button>
       <button
