@@ -5,7 +5,6 @@ module.exports = {
     "^@/(.*)$": "<rootDir>/$1",
     "^~/(.*)$": "<rootDir>/$1",
     "^vuetify$": "<rootDir>/node_modules/vuetify/dist/vuetify.js",
-    // if are using vuetify
     "\\.(css)$": "<rootDir>/test/mocks/emptyMock.js",
     "^@vue/test-utils":
       "<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",

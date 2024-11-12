@@ -1,5 +1,5 @@
 <template>
-  <li class="flex justify-between items-center p-2 border rounded">
+  <li class="flex justify-between items-center p-4 border rounded">
     <div>
       <div v-if="!isEditing">
         <p>{{ editedContact.name }}</p>
@@ -28,7 +28,7 @@
         />
       </div>
     </div>
-    <div class="flex space-x-2">
+    <div class="flex space-x-4">
       <button v-if="!isEditing" @click="toggleEditForm" class="text-blue-500">
         Редактировать
       </button>
