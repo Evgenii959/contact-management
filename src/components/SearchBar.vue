@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4 flex">
+  <div class="mb-8 flex">
     <input
       type="text"
       v-model="localSearchQuery"

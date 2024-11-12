@@ -1,42 +1,51 @@
 <template>
   <div class="mb-4">
     <Form @submit="submitForm">
-      <div class="space-y-2">
+      <div class="space-y-6">
         <div>
+          <label class='m-2'>Имя</label>
           <Field
             v-model="name"
             name="name"
             placeholder="Имя"
-            class="w-full p-2 border rounded"
+            class="w-full p-2 border rounded mt-2"
             validate-on-input
           />
-          <span v-if="nameError" class="text-red-500 text-sm">{{ nameError }}</span>
+          <span v-if="nameError" class="text-red-500 text-sm">{{
+            nameError
+          }}</span>
         </div>
         <div>
+          <label class='m-2'>Телефон</label>
           <Field
             v-model="phone"
             name="phone"
-            placeholder="Телефон"
-            class="w-full p-2 border rounded"
+            placeholder="+79771407249"
+            class="w-full p-2 border rounded mt-2"
             validate-on-input
           />
-          <span v-if="phoneError" class="text-red-500 text-sm">{{ phoneError }}</span>
+          <span v-if="phoneError" class="text-red-500 text-sm">{{
+            phoneError
+          }}</span>
         </div>
         <div>
+          <label class='m-2'>Email</label>
           <Field
             v-model="email"
             name="email"
             type="email"
             placeholder="Email"
-            class="w-full p-2 border rounded"
+            class="w-full p-2 border rounded mt-2"
             validate-on-input
           />
-          <span v-if="emailError" class="text-red-500 text-sm">{{ emailError }}</span>
+          <span v-if="emailError" class="text-red-500 text-sm">{{
+            emailError
+          }}</span>
         </div>
       </div>
       <button
         type="submit"
-        class="mt-4 w-full p-2 bg-blue-500 text-white rounded"
+        class="mt-8 w-full p-2 bg-blue-500 text-white rounded"
       >
         Сохранить
       </button>
@@ -56,6 +65,9 @@ type FormValues = {
   email: string;
 };
 
+const phoneRegex =
+  /^[+]?(\d{1,4})?[\s\(\)-]?\d{1,4}[\s\(\)-]?\d{1,4}[\s\(\)-]?\d{1,4}$/;
+
 const schema = yup.object({
   name: yup
     .string()
@@ -64,6 +76,7 @@ const schema = yup.object({
   phone: yup
     .string()
     .required("Телефон обязателен")
+    .matches(phoneRegex, "Введите корректный номер телефона")
     .min(10, "Телефон должен быть не менее 10 символов"),
   email: yup
     .string()
