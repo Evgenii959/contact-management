@@ -29,13 +29,22 @@
       </div>
     </div>
     <div class="flex space-x-4">
-      <button v-if="!isEditing" @click="toggleEditForm" class="text-blue-500">
+      <button
+        v-if="!isEditing"
+        @click="toggleEditForm"
+        class="text-blue-500 hover:opacity-75 transition-opacity duration-300"
+      >
         Редактировать
       </button>
       <button v-else @click="saveContact" class="text-green-500">
         Сохранить
       </button>
-      <button class="delete-button text-red-500" @click="deleteContact">Удалить</button>
+      <button
+        class="delete-button text-red-500 hover:opacity-75 transition-opacity duration-300"
+        @click="deleteContact"
+      >
+        Удалить
+      </button>
     </div>
   </li>
 </template>

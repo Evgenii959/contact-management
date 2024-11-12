@@ -3,7 +3,7 @@
     <Form @submit="submitForm">
       <div class="space-y-6">
         <div>
-          <label class='m-2'>Имя</label>
+          <label class="m-2">Имя</label>
           <Field
             v-model="name"
             name="name"
@@ -16,7 +16,7 @@
           }}</span>
         </div>
         <div>
-          <label class='m-2'>Телефон</label>
+          <label class="m-2">Телефон</label>
           <Field
             v-model="phone"
             name="phone"
@@ -29,7 +29,7 @@
           }}</span>
         </div>
         <div>
-          <label class='m-2'>Email</label>
+          <label class="m-2">Email</label>
           <Field
             v-model="email"
             name="email"
@@ -45,7 +45,7 @@
       </div>
       <button
         type="submit"
-        class="mt-8 w-full p-2 bg-blue-500 text-white rounded"
+        class="mt-8 w-full p-2 bg-blue-500 text-white rounded hover:opacity-75 transition-opacity duration-300"
       >
         Сохранить
       </button>

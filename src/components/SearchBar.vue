@@ -8,11 +8,16 @@
     />
     <button
       @click="emitSearch"
-      class="ml-2 px-4 py-2 bg-blue-500 text-white rounded"
+      class="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:opacity-75 transition-opacity duration-300"
     >
       Поиск
     </button>
-    <button @click="showAllContacts">Все контакты</button>
+    <button
+      @click="showAllContacts"
+      class="hover:opacity-75 transition-opacity duration-300"
+    >
+      Все контакты
+    </button>
   </div>
 </template>
 
